@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Screen</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="login_id">Email:</label>
+        <input type="text" id="login_id" name="login_id" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const loginData = {
+                login_id: formData.get('login_id'),
+                password: formData.get('password')
+            };
+
+            // Perform API call to authenticate user
+            fetch('https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Save the received token for further API calls (you can store it in a variable or local storage)
+                const token = data.token;
+                // Redirect to the Customer List screen
+                window.location.href = 'customer_list.html';
+            })
+            .catch(error => {
+                alert('Authentication failed. Please check your credentials.');
+            });
+        });
+    </script>
+</body>
+</html>
